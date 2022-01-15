@@ -36,6 +36,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
             for cat in extracted:
                 self.category.add(cat)
 
+
 class ProductTypeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ProductType
@@ -85,6 +86,41 @@ class StockFactory(factory.django.DjangoModelFactory):
     units_sold = 100
 
 
+class ProductAttributeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ProductAttribute
+
+    name = factory.Sequence(lambda n: "product attribute name %d" % n)
+    description = factory.Sequence(lambda n: "product attribute description %d" % n)
+
+
+class ProductAttributeValueFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ProductAttributeValue
+
+    product_attribute = factory.SubFactory(ProductAttributeFactory)
+    attribute_value = fake.lexify(text="attribute value ??????")
+
+
+class ProductInventoryProductAttributeValueFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ProductInventoryProductAttributeValue
+
+    attribute_value = factory.SubFactory(ProductAttributeValueFactory)
+    product_inventory = factory.SubFactory(ProductInventoryFactory)
+
+
+class ProductWithAttributeValuesFactory(ProductInventoryFactory):
+    attributevalues1 = factory.RelatedFactory(
+        ProductInventoryProductAttributeValueFactory,
+        factory_related_name="product_inventory",
+    )
+    attributevalues2 = factory.RelatedFactory(
+        ProductInventoryProductAttributeValueFactory,
+        factory_related_name="product_inventory",
+    )
+
+
 register(CategoryFactory)
 register(ProductFactory)
 register(ProductTypeFactory)
@@ -92,3 +128,6 @@ register(BrandFactory)
 register(ProductInventoryFactory)
 register(MediaFactory)
 register(StockFactory)
+register(ProductAttributeFactory)
+register(ProductAttributeValueFactory)
+register(ProductWithAttributeValuesFactory)

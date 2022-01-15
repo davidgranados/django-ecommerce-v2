@@ -1,0 +1,10 @@
+[
+  {
+    "model": "inventory.productinventoryproductattributevalue",
+    "id": "1",
+    "fields": {
+      "attribute_value": "1",
+      "product_inventory": "1"
+    }
+  }
+]
